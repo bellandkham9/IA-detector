@@ -3,7 +3,7 @@ import os
 from typing import Dict, Any
 
 # Configuration de base
-API_BASE_URL = "http://localhost:5000"  # Remplacez par l'URL de votre API
+API_BASE_URL = "https://ia-belland-detector.vercel.app"  # Remplacez par l'URL de votre API
 TEST_IMAGE_PATH = "DSC02687.jpg"
 TEST_VIDEO_PATH = "amour.mp4"
 TEST_URLS = [

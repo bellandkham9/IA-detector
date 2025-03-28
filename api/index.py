@@ -194,5 +194,17 @@ def analyze_text():
 # POINT D'ENTRÉE
 # ==============================================
 
+
+@app.route('/')
+def home():
+    return jsonify({"message": "Bienvenue sur mon API Flask déployée sur Vercel !"})
+
+@app.route('/predict', methods=['POST'])
+def predict():
+    return jsonify({"message": "Voici ta prédiction !"})
+
+# Assurez-vous que le serveur Flask s'exécute bien avec Vercel
+def handler(event, context):
+    return app(event, context)
 if __name__ == '__main__':
     app.run(host='127.0.0.1', port=5000, debug=True)

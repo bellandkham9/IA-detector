@@ -1,0 +1,11 @@
+flask
+timm
+transformers
+requests
+beautifulsoup4
+opencv-python
+moviepy
+Pillow
+torch
+torchvision
+numpy

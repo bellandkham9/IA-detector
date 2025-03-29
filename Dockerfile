@@ -1,4 +1,4 @@
-# Utilise une image Python officielle et légère
+# Utiliser une image Python officielle
 FROM python:3.9-slim
 
 # Installer les dépendances système nécessaires
@@ -19,9 +19,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Exposer le port 8080 (Railway peut rediriger vers ce port)
 EXPOSE 8080
 
-# Créer un script shell d'entrée
-RUN echo '#!/bin/sh \n\
-    exec gunicorn --bind 0.0.0.0:${PORT:-8080} --workers 1 --threads 2 --timeout 300 app:app' > /start.sh && chmod +x /start.sh
-
-# Commande de démarrage
-CMD ["/start.sh"]
+# Commande de démarrage en utilisant le Procfile
+CMD ["sh", "-c", "gunicorn --bind 0.0.0.0:${PORT:-8080} app:app"]

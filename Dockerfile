@@ -1,23 +1,16 @@
 # Utiliser une image Python officielle
-FROM python:3.9-slim
+FROM python:3.9-slim-bullseye
 
-# Installer les dépendances système nécessaires
+# Installer les dépendances
 RUN apt-get update && apt-get install -y \
-    python3-dev \
-    libgl1-mesa-glx libsm6 libxrender1 libxext6 ffmpeg \
-    build-essential pkg-config
+    libgl1-mesa-glx libsm6 libxrender1 ffmpeg \
+    && rm -rf /var/lib/apt/lists/*
 
-# Définir le répertoire de travail
 WORKDIR /app
-
-# Copier les fichiers du projet
 COPY . .
 
-# Installer les dépendances Python
-RUN pip install --no-cache-dir -r requirements.txt
+# Solution clé - Utilisez un script de démarrage
+COPY start.sh /start.sh
+RUN chmod +x /start.sh
 
-# Exposer le port (Railway redirige ce port)
-EXPOSE 8080
-
-# Commande de démarrage en utilisant le Procfile
-CMD ["sh", "-c", "gunicorn", "--bind", "0.0.0.0:$PORT", "app:app"]
+CMD ["/start.sh"]

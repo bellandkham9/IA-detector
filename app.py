@@ -1,4 +1,5 @@
 import os
+os.system('apt-get update && apt-get install -y libgl1')
 from flask import Flask, request, jsonify
 import torch
 import timm

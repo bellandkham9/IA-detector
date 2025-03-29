@@ -18,4 +18,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . . 
 
 # 5. Exécute le script
-CMD ["/start.sh"]  # <-- Utilise le chemin absolu
+# CMD ["/start.sh"]  # <-- Utilise le chemin absolu
+CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:8080", "app:app"]

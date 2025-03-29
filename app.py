@@ -1,21 +1,29 @@
-# Ajoutez en tête du fichier
 import os
-os.environ["CUDA_VISIBLE_DEVICES"] = ""  # Force le mode CPU
-os.system('apt-get update && apt-get install -y libgl1')
-os.environ['SKIP_PIP_PROBLEMATIC_PACKAGES'] = '1'
-os.environ['PYTHONWARNINGS'] = 'ignore'
+os.environ["CUDA_VISIBLE_DEVICES"] = ""
+os.environ["OMP_NUM_THREADS"] = "1"  # Réduction mémoire
+
+# Chargement paresseux des modèles
+def get_image_model():
+    import timm
+    model = timm.create_model("efficientnet_b0", pretrained=True, num_classes=2)
+    model.eval()
+    return model
+
+def get_nlp_model():
+    from transformers import pipeline
+    return pipeline("text-classification", model="distilbert-base-uncased")
+
+# Importation des bibliothèques nécessaires
 from flask import Flask, request, jsonify
 import torch
-import timm
 import torchvision.transforms as transforms
 from PIL import Image
 import cv2
 import numpy as np
-from transformers import pipeline
+import logging
+from typing import Optional
 import requests
 from bs4 import BeautifulSoup
-import logging
-from typing import Optional, Dict, Tuple
 
 # Configuration de l'application Flask
 app = Flask(__name__)
@@ -29,22 +37,9 @@ logger = logging.getLogger(__name__)
 # INITIALISATION DES MODÈLES
 # ==============================================
 
-# Modèle de détection d'images
-try:
-    image_model = timm.create_model("tf_efficientnet_b4_ns", pretrained=True, num_classes=2)
-    image_model.eval()
-    logger.info("Modèle de détection d'images chargé avec succès")
-except Exception as e:
-    logger.error(f"Erreur lors du chargement du modèle image: {e}")
-    raise
-
-# Modèle de détection de fake news
-try:
-    fake_news_model = pipeline("text-classification", model="roberta-base-openai-detector")
-    logger.info("Modèle de détection de fake news chargé avec succès")
-except Exception as e:
-    logger.error(f"Erreur lors du chargement du modèle NLP: {e}")
-    raise
+# Initialisation paresseuse des modèles
+image_model = get_image_model()
+fake_news_model = get_nlp_model()
 
 # ==============================================
 # FONCTIONS UTILITAIRES
@@ -199,7 +194,6 @@ def analyze_text():
 # POINT D'ENTRÉE
 # ==============================================
 
-
 @app.route('/')
 def home():
     return jsonify({"message": "Bienvenue sur mon API Flask déployée sur Vercel !"})
@@ -211,6 +205,7 @@ def predict():
 # Assurez-vous que le serveur Flask s'exécute bien avec Vercel
 def handler(event, context):
     return app(event, context)
+
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 8000))
     app.run(host='0.0.0.0', port=port)

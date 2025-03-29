@@ -1,15 +1,8 @@
 #!/bin/bash
-# Active l'environnement Python (si nécessaire)
-source /opt/venv/bin/activate 2>/dev/null || true
 
-# Définit le port par défaut
-PORT=${PORT:-8000}
+# Initialisation des variables d'environnement
+export CUDA_VISIBLE_DEVICES=""
+export OMP_NUM_THREADS=1  # Réduction de la mémoire
 
-# Lance Gunicorn avec la configuration optimisée
-exec gunicorn --bind 0.0.0.0:$PORT \
-    --workers 1 \
-    --threads 2 \
-    --timeout 120 \
-    --access-logfile - \
-    --error-logfile - \
-    app:app
+# Exécution de l'application
+exec python app.py

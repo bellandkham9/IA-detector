@@ -11,11 +11,11 @@ RUN chmod +x /start.sh
 
 # 3. Installe les dépendances Python
 WORKDIR /app
-COPY requirements.txt .
+COPY requirements.txt . 
 RUN pip install --no-cache-dir -r requirements.txt
 
 # 4. Copie le code applicatif
-COPY . .
+COPY . . 
 
 # 5. Exécute le script
 CMD ["/start.sh"]  # <-- Utilise le chemin absolu

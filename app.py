@@ -2,6 +2,8 @@
 import os
 os.environ["CUDA_VISIBLE_DEVICES"] = ""  # Force le mode CPU
 os.system('apt-get update && apt-get install -y libgl1')
+os.environ['SKIP_PIP_PROBLEMATIC_PACKAGES'] = '1'
+os.environ['PYTHONWARNINGS'] = 'ignore'
 from flask import Flask, request, jsonify
 import torch
 import timm

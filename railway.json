@@ -3,26 +3,38 @@
     "build": {
       "builder": "NIXPACKS",
       "nixpacksPlan": {
-        "baseImage": "debian:bullseye",
-        "environment": {
-          "PIP_MEMORY_LIMIT": "384",
-          "PIP_NO_CACHE_DIR": "1",
-          "TORCH_CUDA_VERSION": "none"
+        "providers": {
+          "apt": {
+            "packages": [
+              "libgl1-mesa-glx",
+              "libsm6",
+              "libxrender1",
+              "libxext6",
+              "ffmpeg",
+              "python3-dev",
+              "build-essential",
+              "pkg-config"
+            ]
+          }
         },
-        "aptPackages": [
-          "libgl1-mesa-glx",
-          "libsm6",
-          "libxrender1",
-          "libxext6",
-          "ffmpeg",
-          "python3-dev"
-        ],
-        "scripts": {
-          "preInstall": "apt-get update && apt-get install -y build-essential",
-          "postInstall": [
-            "pip install --no-cache-dir torch==1.13.0+cpu torchvision==0.14.1+cpu --index-url https://download.pytorch.org/whl/cpu",
-            "pip install --no-cache-dir -r requirements.txt"
-          ]
+        "phases": {
+          "setup": {
+            "commands": [
+              "apt-get update -qq",
+              "apt-get install -y --no-install-recommends"
+            ]
+          },
+          "install": {
+            "runtimeEnv": {
+              "PIP_MEMORY_LIMIT": "512",
+              "PIP_NO_CACHE_DIR": "1",
+              "SKIP_PIP_PROBLEMATIC_PACKAGES": "1"
+            },
+            "commands": [
+              "pip install --no-cache-dir --only-binary=:all: torch==1.13.0+cpu torchvision==0.14.1+cpu --index-url https://download.pytorch.org/whl/cpu",
+              "pip install --no-cache-dir -r requirements.txt"
+            ]
+          }
         }
       }
     },

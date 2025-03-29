@@ -16,7 +16,7 @@ COPY . .
 # Installer les dépendances Python
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Exposer le port 8080 (Railway peut rediriger vers ce port)
+# Exposer le port (Railway redirige ce port)
 EXPOSE 8080
 
 # Commande de démarrage en utilisant le Procfile

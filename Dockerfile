@@ -19,5 +19,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Exposer le port 8080 (Railway peut rediriger vers ce port)
 EXPOSE 8080
 
-# Commande de démarrage avec Gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:$PORT", "--workers", "1", "--threads", "2", "--timeout", "300", "app:app"]
+# Créer un script shell d'entrée
+RUN echo '#!/bin/sh \n\
+    exec gunicorn --bind 0.0.0.0:${PORT:-8080} --workers 1 --threads 2 --timeout 300 app:app' > /start.sh && chmod +x /start.sh
+
+# Commande de démarrage
+CMD ["/start.sh"]

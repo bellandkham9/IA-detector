@@ -3,25 +3,30 @@
     "build": {
       "builder": "nixpacks",
       "config": {
+        "baseImage": "debian:bullseye",
         "environment": {
-          "PIP_MEMORY_LIMIT": "512",
+          "PIP_MEMORY_LIMIT": "384",
           "PIP_NO_CACHE_DIR": "1",
-          "TORCH_CUDA_VERSION": "none"  
+          "TORCH_CUDA_VERSION": "none"
         },
         "aptPackages": [
           "libgl1-mesa-glx",
           "libsm6",
           "libxrender1",
           "libxext6",
-          "libglib2.0-0" 
+          "ffmpeg",
+          "python3-dev"
         ],
         "scripts": {
-          "preInstall": "apt-get update && apt-get install -y python3-dev", 
-          "postInstall": "pip install --no-cache-dir torch==2.0.1+cpu --index-url https://download.pytorch.org/whl/cpu && pip install --no-cache-dir -r requirements.txt"
+          "preInstall": "apt-get update && apt-get install -y build-essential",
+          "postInstall": [
+            "pip install --no-cache-dir torch==1.13.0+cpu torchvision==0.14.1+cpu --index-url https://download.pytorch.org/whl/cpu",
+            "pip install --no-cache-dir -r requirements.txt"
+          ]
         }
       }
     },
     "deploy": {
-      "startCommand": "gunicorn --workers 2 --threads 4 --bind 0.0.0.0:$PORT --timeout 120 app:app"
+      "startCommand": "gunicorn --bind 0.0.0.0:$PORT --workers 1 --threads 2 --timeout 300 app:app"
     }
   }

@@ -4,7 +4,7 @@ timm
 transformers
 requests
 beautifulsoup4
-opencv-python
+opencv-python-headless
 moviepy
 Pillow
 torch

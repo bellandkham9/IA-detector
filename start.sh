@@ -4,5 +4,5 @@
 export CUDA_VISIBLE_DEVICES=""
 export OMP_NUM_THREADS=1  # Réduction de la mémoire
 
-# Exécution de l'application
-exec python app.py
+# Lancement de Gunicorn pour exécuter Flask en mode production
+exec gunicorn -w 4 -b 0.0.0.0:8080 app:app

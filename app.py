@@ -1,4 +1,6 @@
+# Ajoutez en tête du fichier
 import os
+os.environ["CUDA_VISIBLE_DEVICES"] = ""  # Force le mode CPU
 os.system('apt-get update && apt-get install -y libgl1')
 from flask import Flask, request, jsonify
 import torch
